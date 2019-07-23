@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>board page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+  <style>
+    .card{
+        margin: 20px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    .card-header{
+        color: white;
+        text-align: center;
+        margin-left: 25px;
+        margin-right: 25px;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+    .btn-mine {
+        width: 30px;
+        height: 30px; 
+        float: right;
+        margin-right: 10px;
+    }
+    #todoDiv, #doingDiv, #doneDiv{
+        overflow:auto; width:100%; height:500px; margin-right: 30px;
+    }
+    
+    html { 
+        scrollbar-arrow-color: #efefef;
+
+        scrollbar-Track-Color: #efefef; 
+        scrollbar-base-color: #dfdfdf;
+
+        scrollbar-Face-Color: #dfdfdf;
+
+        scrollbar-3dLight-Color: #dfdfdf;         
+        scrollbar-DarkShadow-Color: #dfdfdf;
+
+        scrollbar-Highlight-Color: #dfdfdf;
+
+        scrollbar-Shadow-Color: #dfdfdf
+    }
+    /* Chrome, Safari용 스크롤 바 */
+    ::-webkit-scrollbar {width: 12px; height: 12px;  }
+    ::-webkit-scrollbar-button:start:decrement, 
+    ::-webkit-scrollbar-button:end:increment {display: block; width: 12px;height: 12px; background: url() rgba(0,0,0,.05);}
+    ::-webkit-scrollbar-track {     background: rgba(0,0,0,.05); }
+    ::-webkit-scrollbar-thumb {  background: rgba(0,0,0,.1);  }
+
+  </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 60px">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="/board">
+                <img alt="Brand" src="logo.png" style="margin-top: -30px;width:110px">
+            </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container" >
+        <div style='float:right'>
+        <%  for( user of userName){ %>
+            <a class="btn btn-info btn-icon-split ">
+                <span class="text text-white text-lg"  onclick='showUsers("<%=user %>")'> <%=user %></span>
+            </a>
+        <% }  %>
+        <a class="btn btn-light btn-icon-split">
+          <span id='showAll' class='text text-lg' >모두 보기</span>  
+        </a>
+            <a href='/register' class="btn btn-light btn-icon-split">
+                <span id='registerBtn' class='text text-lg' >할일 등록</span>  
+            </a>
+            <a href='/users/logout' class="btn btn-light btn-icon-split">
+                <span id='logoutBtn' class='text text-lg' >로그아웃</span>  
+            </a>
+            <a href='/archive'  class='btn btn-danger btn-circle'><i class="fas fa-trash"></i></a>  
+        </div>
+    </div>
+
+    <div class='content' style="margin: 5em">
+        <div class="row col-md-4">
+            <h1 class="card-header">To do</h1>
+            <div id='todoDiv'>
+                <% for(row of rows) { 
+                if (row.type=='TODO') {%>
+                    <div class="card border-left-primary shadow">
+                        <ul>
+                            <li>제목 : <%=row.title %></li>
+                            <li>등록날짜 : <%=row.regdate %></li>
+                            <li>담당자 : <%=row.name %></li>
+                            <li>우선순위 : <%=row.sequence %></li>
+                            <input type="hidden" name='updateData' value='<%=row.id %>'/>
+                        </ul>
+                        <div>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='todoArchive("<%=row.id %>")'><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn("<%=row.id %>")'><i class="fas fa-arrow-right"></i></button>                            
+                        </div>
+                    </div>  
+                <% }
+             } %>
+            </div>
+        </div>
+
+        <div class="row col-md-4">
+            <h1 class="card-header">Doing</h1>
+            <div id='doingDiv'>
+                <% for(row of rows) { 
+                    if (row.type=='DOING') {%>
+                <div class="card border-left-primary shadow" >
+                    <ul>
+                        <li>제목 : <%=row.title %></li>
+                        <li>등록날짜 : <%=row.regdate %></li>
+                        <li>담당자 : <%=row.name %></li>
+                        <li>우선순위 : <%=row.sequence %></li>
+                    </ul>
+                    <div>
+                        <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive("<%=row.id %>")'><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn("<%=row.id %>")'><i class="fas fa-arrow-right"></i></button>                         
+                    </div>
+                </div>
+                <% }
+                 } %>
+            </div>
+        </div>
+
+        <div class="row col-md-4">
+            <h1 class="card-header">Done</h1>
+            <div id='doneDiv'>
+                <% for(row of rows) { 
+                if (row.type=='DONE') {%>
+                <div class="card border-left-primary shadow">
+                    <ul>
+                        <li>제목 : <%=row.title %></li>
+                        <li>등록날짜 : <%=row.regdate %></li>
+                        <li>담당자 : <%=row.name %></li>
+                        <li>우선순위 : <%=row.sequence %></li>
+                    </ul>
+                    <div>
+                        <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive("<%=row.id %>")'><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn("<%=row.id %>")'><i class="fas fa-arrow-right"></i></button>                         
+                    </div>
+                </div>
+                <% }
+                } %>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script>
+    let id = 0;
+    let user = 0;
+
+    function clickTxt(elem) {
+            id = $(elem).attr("id");
+            console.log(id);
+    }
+
+    function todoArchive(id) {
+        console.log('id', id);
+
+        $.ajax({
+            url: '/updateArchieve',
+            data: {
+                archiveData: id
+            },
+            type: 'get',
+            dataType: 'json',
+            success: (data) => {
+                console.log('성공', data)
+                $('#todoDiv').empty()
+                //화면 조작: dom 조작
+                $.each(data, (index, item) => {
+                    if (item.type === 'TODO'){
+                        $('#todoDiv').append(`
+                        <div class="card border-left-primary shadow">
+                            <ul>
+                                <li>제목 : ${item.title}</li>
+                                <li>등록날짜 :  ${item.regdate}</li>
+                                <li>담당자 : ${item.name}</li>
+                                <li>우선순위 : ${item.sequence}</li>
+                            </ul>
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='todoArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)                        
+                    }
+
+                }) //each문 끝
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+    }
+
+    function doingArchive(id) {
+        console.log('id', id);
+
+        $.ajax({
+            url: '/updateArchieve',
+            data: {
+                archiveData: id
+            },
+            type: 'get',
+            dataType: 'json',
+            success: (data) => {
+                console.log('성공', data)
+                $('#doingDiv').empty()
+                //화면 조작: dom 조작
+                $.each(data, (index, item) => {
+                    if (item.type === 'DOING'){
+                        $('#doingDiv').append(`
+                        <div class="card border-left-primary shadow">
+                            <ul>
+                                <li>제목 :      ${item.title}</li>
+                                <li>등록날짜 :  ${item.regdate}</li>
+                                <li>담당자 :    ${item.name}</li>
+                                <li>우선순위 :  ${item.sequence}</li>
+                            </ul>
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)                        
+                    }
+                }) //each문 끝
+
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+    }
+
+    function doneArchive(id) {
+        console.log('id', id);
+
+        $.ajax({
+            url: '/updateArchieve',
+            data: {
+                archiveData: id
+            },
+            type: 'get',
+            dataType: 'json',
+            success: (data) => {
+                console.log('성공', data)
+                $('#doneDiv').empty()
+                //화면 조작: dom 조작
+                $.each(data, (index, item) => {
+                    if (item.type === 'DONE'){
+                        $('#doneDiv').append(`
+                        <div class="card border-left-primary shadow">
+                        <ul>
+                            <li>제목 :      ${item.title}</li>
+                            <li>등록날짜 :  ${item.regdate}</li>
+                            <li>담당자 :    ${item.name}</li>
+                            <li>우선순위 :  ${item.sequence}</li>
+                        </ul>
+                        <div>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                        </div>
+                    </div>`)                        
+                    }
+                }) //each문 끝
+
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+    }
+
+    function moveBtn(id){
+        $.ajax({
+            url: '/update',
+            data: {
+                updateData: id
+            },
+            type: 'post',
+            dataType: 'json',
+            success: (data) => {
+                // 기존 데이터 삭제
+                $('#todoDiv').empty()
+                $('#doingDiv').empty()
+                $('#doneDiv').empty() 
+                // 신규 데이터 추가
+                $.each(data, (idx, row)=>{
+                    let html = `
+                        <div class="card border-left-primary shadow">
+                            <ul>
+                                <li>제목 : ${row.title}</li>
+                                <li>등록날짜 :  ${row.regdate}</li>
+                                <li>담당자 : ${row.name}</li>
+                                <li>우선순위 : ${row.sequence}</li>
+                            </ul>`
+                        
+                        if( row.type == 'TODO' ) {
+                            $('#todoDiv').append(html+`
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='todoArchive(${row.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${row.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)
+                        } else if( row.type == 'DOING' ) {
+                            $('#doingDiv').append(html+`
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${row.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${row.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)
+                        } else if( row.type == 'DONE' ) {
+                            $('#doneDiv').append(html+`
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${row.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${row.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)
+                        }
+
+                })   
+
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+
+    }
+
+
+    $('#showAll').on('click', (evt) => {
+        evt.preventDefault()
+
+        $.ajax({
+            url: '/list',
+            data: $('form').serialize(),
+            type: 'get',
+            dataType: 'json',
+            success: (data) => {
+                console.log('성공', data)
+                $('#todoDiv').empty()
+                $('#doingDiv').empty()
+                $('#doneDiv').empty()
+
+                //화면 조작: dom 조작
+                $.each(data, (index, item) => {
+
+                    if (item.type === 'TODO') {
+                        $('#todoDiv').append(`
+                        <div class="card border-left-primary shadow">
+                            <ul>
+                                <li>제목 :      ${item.title}</li>
+                                <li>등록날짜 :  ${item.regdate}</li>
+                                <li>담당자 :    ${item.name}</li>
+                                <li>우선순위 :  ${item.sequence}</li>
+                            </ul>
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='todoArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`)  
+                    } else if (item.type === 'DOING') {
+                        $('#doingDiv').append(`
+                        <div class="card border-left-primary shadow">
+                            <ul>
+                                <li>제목 :      ${item.title}</li>
+                                <li>등록날짜 :  ${item.regdate}</li>
+                                <li>담당자 :    ${item.name}</li>
+                                <li>우선순위 :  ${item.sequence}</li>
+                            </ul>
+                            <div>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                            </div>
+                        </div>`) 
+                    } else if (item.type === 'DONE') {
+                        $('#doneDiv').append(`
+                        <div class="card border-left-primary shadow">
+                        <ul>
+                            <li>제목 :      ${item.title}</li>
+                            <li>등록날짜 :  ${item.regdate}</li>
+                            <li>담당자 :    ${item.name}</li>
+                            <li>우선순위 :  ${item.sequence}</li>
+                        </ul>
+                        <div>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                        </div>
+                    </div>`) 
+                    }
+                }) //each문 끝
+
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+        return false
+    })
+
+
+    function showUsers(user){
+        $.ajax({
+            url: '/search',
+            data: {
+                userName: user
+            },
+            type: 'get',
+            dataType: 'json',
+            success: (data) => {
+                console.log('성공', data)
+                $('#todoDiv').empty()
+                $('#doingDiv').empty()
+                $('#doneDiv').empty()
+
+                //화면 조작: dom 조작
+                $.each(data, (index, item) => {
+                    console.log('----------------여기--------', user)
+
+                    if (item.name === user) {
+                        console.log(item.name, user)
+
+                        if (item.type === 'TODO') {
+                            $('#todoDiv').append(`
+                                <div class="card border-left-primary shadow">
+                                    <ul>
+                                        <li>제목 :      ${item.title}</li>
+                                        <li>등록날짜 :  ${item.regdate}</li>
+                                        <li>담당자 :    ${item.name}</li>
+                                        <li>우선순위 :  ${item.sequence}</li>
+                                    </ul>
+                                    <div>
+                                        <button class="btn btn-light btn-icon-split btn-mine" onclick='todoArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                                    </div>
+                                </div>`)  
+                        } else if (item.type === 'DOING') {
+                            $('#doingDiv').append(`
+                                <div class="card border-left-primary shadow">
+                                    <ul>
+                                        <li>제목 :      ${item.title}</li>
+                                        <li>등록날짜 :  ${item.regdate}</li>
+                                        <li>담당자 :    ${item.name}</li>
+                                        <li>우선순위 :  ${item.sequence}</li>
+                                    </ul>
+                                    <div>
+                                        <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                                    </div>
+                                </div>`) 
+                        } else if (item.type === 'DONE') {
+                            $('#doneDiv').append(`
+                            <div class="card border-left-primary shadow">
+                                <ul>
+                                    <li>제목 :      ${item.title}</li>
+                                    <li>등록날짜 :  ${item.regdate}</li>
+                                    <li>담당자 :    ${item.name}</li>
+                                    <li>우선순위 :  ${item.sequence}</li>
+                                </ul>
+                                <div>
+                                    <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${item.id})'><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
+                                </div>
+                            </div>`) 
+                        }
+                    }
+                }) //each문 끝
+            },
+            error: (err) => {
+                console.log('실패', err)
+            }
+        });
+
+    }
+
+    </script>
+</body>
+
+</html>

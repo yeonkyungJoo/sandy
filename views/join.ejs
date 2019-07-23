@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Create an Account!</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-md-6">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                  </div>
+                  <br/>
+                  <form method='post' class="user">
+                    <div class="form-group">
+                      <input type="text" class="form-control form-control-user"  name="nickName" id="checkExistNickName" aria-describedby="emailHelp" placeholder="Nickname" required />
+                    </div>
+                    <p class="text-center small" id ="checkNickNameMsg"></p>
+                    <div class="form-group">
+                      <input type="password" class="form-control form-control-user" name="upw" id="password" onchange="checkSamePassword()" placeholder="Password" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control form-control-user" name="checkUpw" id="checkPassword" onchange="checkSamePassword()" placeholder="Password check" required />
+                    </div>
+                    <p class="text-center small" id="checkMsg"></p>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-user" name="userName" placeholder="Name" required />
+                    </div>
+                    <hr>
+                    <input type="submit" class="btn btn-primary btn-user btn-block" id="join" value="join" />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+  <script>
+        var checkNickNameMsg = document.getElementById('checkNickNameMsg') 
+
+        $('#checkExistNickName').on('change', (evt)=> {
+            console.log(evt)
+            $.ajax({
+                url:'/users/check',
+                data: {
+                   nickName : $('[name=nickName]').val()
+                },
+                type : 'get',
+                dataType : 'json',
+                success : (data) => {
+                    console.log('성공', typeof data, data)
+                    console.log(data.length)
+                    if (data.length == 0) {
+                       //$('#checkNickNameMsg').append('사용할 수 있는 닉네임입니다')
+                        checkNickNameMsg.innerHTML = '사용할 수 있는 닉네임입니다'
+                        checkNickNameMsg.style.color = 'green'
+                        checkNickNameMsg.style.fontSize = '10px'
+                        $('#join').attr("disabled", false)
+                    } else {
+                        checkNickNameMsg.innerHTML = '이미 존재하는 닉네임입니다'
+                        checkNickNameMsg.style.color = 'red'
+                        checkNickNameMsg.style.fontSize = '10px'
+                        $('#join').attr("disabled", true)
+                    }
+                },
+                error : (err) => {
+                    console.log('실패', err)
+                }
+            })
+        })
+
+        function checkSamePassword() {
+            var password = document.getElementById('password')
+            var checkPassword = document.getElementById('checkPassword')
+            var checkMsg = document.getElementById('checkMsg')
+
+            if(password.value !='' && checkPassword.value != '') {
+                if(password.value == checkPassword.value) {
+                    checkMsg.innerHTML = '비밀번호가 일치합니다'
+                    checkMsg.style.color = 'green'
+                    checkMsg.style.fontSize = '10px'
+                    $('#join').attr("disabled", false)  // join버튼 활성화          
+                } else {
+                    checkMsg.innerHTML = '비밀번호가 일치하지 않습니다'
+                    checkMsg.style.color = 'red'
+                    checkMsg.style.fontSize = '10px'
+                    $('#join').attr("disabled", true)  // join버튼 비활성화
+                }
+            }    
+        }    
+  </script>
+
+</body>
+
+</html>

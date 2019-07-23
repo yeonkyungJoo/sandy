@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>register</title>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-primary">
+
+        <div class="container">
+      
+          <!-- Outer Row -->
+          <div class="row justify-content-center">
+      
+            <div class="col-md-6">
+      
+              <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                  <!-- Nested Row within Card Body -->
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="p-5">
+                        <div class="text-center">
+                          <h1 class="h4 text-gray-900 mb-4">할일 등록</h1>
+                        </div>
+                        <br/>
+                        <form method='post' class="user">
+                            <div class="form-group">
+                                <p>어떤 일인가요?</p>
+                                <input type="text" class="form-control form-control-user" name="title" maxlength="24"
+                                    placeholder="24자 이내로 입력하세요" required />
+                            </div>
+                            <div class="form-group">
+                                <p>누가 할일인가요?</p>
+                                <select class="form-control" name="name" required>
+                                    <% for(row of rows) {%>
+                                    <option><%=row.nickName %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <p>우선순위를 선택하세요</p>
+                                <input type="radio" name="sequence" value=1 required /> 1순위
+                                <input type="radio" name="sequence" value=2 /> 2순위
+                                <input type="radio" name="sequence" value=3 /> 3순위
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary btn-user btn-block" type="submit" value="등록하기" />                    
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+    
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+    
+</body>
+
+</html>

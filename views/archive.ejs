@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>archieve page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .card{
+            margin: 20px;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+        .card-header{
+            color: white;
+            text-align: center;
+            margin-left: 25px;
+            margin-right: 25px;
+            margin-bottom: 25px;
+        }
+        .btn-mine {
+            width: 30px;
+            height: 30px; 
+            float: right;
+            margin-right: 10px;
+        }
+        html { 
+            scrollbar-arrow-color: #efefef;
+    
+            scrollbar-Track-Color: #efefef; 
+            scrollbar-base-color: #dfdfdf;
+    
+            scrollbar-Face-Color: #dfdfdf;
+    
+            scrollbar-3dLight-Color: #dfdfdf;         
+            scrollbar-DarkShadow-Color: #dfdfdf;
+    
+            scrollbar-Highlight-Color: #dfdfdf;
+    
+            scrollbar-Shadow-Color: #dfdfdf
+        }
+        /* Chrome, Safari용 스크롤 바 */
+        ::-webkit-scrollbar {width: 12px; height: 12px;  }
+        ::-webkit-scrollbar-button:start:decrement, 
+        ::-webkit-scrollbar-button:end:increment {display: block; width: 12px;height: 12px; background: url() rgba(0,0,0,.05);}
+        ::-webkit-scrollbar-track {     background: rgba(0,0,0,.05); }
+        ::-webkit-scrollbar-thumb {  background: rgba(0,0,0,.1);  }
+    
+    </style>
+</head>
+
+<body style='padding: 0'>
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 60px">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            <a class="navbar-brand" href="/board">
+                <img alt="Brand" src="logo.png" style="margin-top: -30px;width:110px">
+            </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="card-header" style='margin-top: 10px;width:300px;' >Archive</h1>
+        <div id='removeDiv' style="overflow:auto; width:100%; height:550px">
+            <% for(row of rows) { %>
+            <div class="card border-left-primary shadow" style="float:left">
+                <ul>
+                    <li>제목 :      <%=row.title %></li>
+                    <li>등록날짜 :  <%=row.regdate %></li>
+                    <li>담당자 :    <%=row.name %></li>
+                    <li>우선순위 :  <%=row.sequence %></li>
+                    <li>타입 :      <%=row.type %></li>
+                </ul>
+                <div>
+                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove("<%=row.id %>")'><i class="fas fa-trash"></i></button> 
+                </div>
+            </div>
+
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        let id = 0;
+
+        function clickRemove(id) {
+            var con_test = confirm("영구 삭제 하시겠습니까?");
+            if (con_test) {
+                console.log('id', id);
+
+                $.ajax({
+                    url: '/remove',
+                    data: {
+                        updateData: id
+                    },
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        console.log('성공', data)
+                        $('#removeDiv').empty()
+                        //화면 조작: dom 조작
+                        $.each(data, (index, item) => {
+                            $('#removeDiv').append(`
+                            <div class="card border-left-primary shadow" style="float:left">
+                                <ul>
+                                    <li>제목 :      ${item.title}</li>
+                                    <li>등록날짜 :  ${item.regdate}</li>
+                                    <li>담당자 :    ${item.name}</li>
+                                    <li>우선순위 :  ${item.sequence}</li>
+                                </ul>
+                                <div>
+                                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove(${item.id})'><i class="fas fa-trash"></i></button> 
+                                </div>
+                            </div>`)
+                        }) //each문 끝
+
+                    },
+                    error: (err) => {
+                        console.log('실패', err)
+                    }
+                });
+            }
+        }
+
+    </script>
+</body>
+
+</html>
