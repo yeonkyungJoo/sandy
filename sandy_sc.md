@@ -1325,7 +1325,7 @@ module.exports = router;
                     <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                   </div>
                   <br/>
-                  <form method='post' class="user">
+                  <form method='post' class="user" action="/users/join">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user"  name="nickName" id="checkExistNickName" aria-describedby="emailHelp" placeholder="Nickname" required />
                     </div>
@@ -1467,7 +1467,7 @@ module.exports = router;
                           <h1 class="h4 text-gray-900 mb-4">할일 등록</h1>
                         </div>
                         <br/>
-                        <form method='post' class="user">
+                        <form method='post' class="user" action="/register">
                             <div class="form-group">
                                 <p>어떤 일인가요?</p>
                                 <input type="text" class="form-control form-control-user" name="title" maxlength="24"
