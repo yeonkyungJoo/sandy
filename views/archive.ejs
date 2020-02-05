@@ -1,6 +1,8 @@
+<!-- views/archive.ejs -->
+<!-- 휴지통 화면 -->
+
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>archieve page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -28,32 +30,27 @@
         }
         .btn-mine {
             width: 30px;
-            height: 30px; 
+            height: 30px;
             float: right;
             margin-right: 10px;
         }
-        html { 
+        html {
             scrollbar-arrow-color: #efefef;
-    
-            scrollbar-Track-Color: #efefef; 
-            scrollbar-base-color: #dfdfdf;
-    
+            scrollbar-Track-Color: #efefef;
+            scrollbar-base-color: #dfdfdf;  
             scrollbar-Face-Color: #dfdfdf;
-    
             scrollbar-3dLight-Color: #dfdfdf;         
             scrollbar-DarkShadow-Color: #dfdfdf;
-    
             scrollbar-Highlight-Color: #dfdfdf;
-    
             scrollbar-Shadow-Color: #dfdfdf
         }
         /* Chrome, Safari용 스크롤 바 */
         ::-webkit-scrollbar {width: 12px; height: 12px;  }
-        ::-webkit-scrollbar-button:start:decrement, 
+        ::-webkit-scrollbar-button:start:decrement,
         ::-webkit-scrollbar-button:end:increment {display: block; width: 12px;height: 12px; background: url() rgba(0,0,0,.05);}
         ::-webkit-scrollbar-track {     background: rgba(0,0,0,.05); }
         ::-webkit-scrollbar-thumb {  background: rgba(0,0,0,.1);  }
-    
+
     </style>
 </head>
 
@@ -80,19 +77,18 @@
                     <li>타입 :      <%=row.type %></li>
                 </ul>
                 <div>
-                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove("<%=row.id %>")'><i class="fas fa-trash"></i></button> 
+                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove("<%=row.id %>")'><i class="fas fa-trash"></i></button>
                 </div>
             </div>
-
             <% } %>
         </div>
     </div>
 
     <script>
         let id = 0;
-
         function clickRemove(id) {
             var con_test = confirm("영구 삭제 하시겠습니까?");
+
             if (con_test) {
                 console.log('id', id);
 
@@ -103,11 +99,15 @@
                     },
                     type: 'get',
                     dataType: 'json',
+
                     success: (data) => {
                         console.log('성공', data)
+
                         $('#removeDiv').empty()
+
                         //화면 조작: dom 조작
                         $.each(data, (index, item) => {
+
                             $('#removeDiv').append(`
                             <div class="card border-left-primary shadow" style="float:left">
                                 <ul>
@@ -117,11 +117,10 @@
                                     <li>우선순위 :  ${item.sequence}</li>
                                 </ul>
                                 <div>
-                                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove(${item.id})'><i class="fas fa-trash"></i></button> 
+                                    <button class="btn btn-light btn-icon-split btn-mine" onclick='clickRemove(${item.id})'><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>`)
-                        }) //each문 끝
-
+                        }) // each문 end
                     },
                     error: (err) => {
                         console.log('실패', err)
@@ -129,8 +128,6 @@
                 });
             }
         }
-
     </script>
 </body>
-
 </html>

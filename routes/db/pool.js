@@ -1,3 +1,6 @@
+// routes/db/pool.js
+// Pool 생성
+
 // 1. 모듈 가져오기 (이 코드는 서버가 가동되면 1회만 수행) -> 설치
 const genericPool = require('generic-pool')
 const mysql = require('mysql')
@@ -16,7 +19,6 @@ const factory = {
         // 연결객체 리턴
         return connection
     },
-
     destroy : ( db_session ) => {
         // db_session : 연결 커넥션
         db_session.end() // 연결 종료
@@ -33,7 +35,7 @@ const opts = {
 const myPool = genericPool.createPool(factory, opts)
 
 // 3. 풀링 해제
-// 노드 서버가 종료되기 직전의 이벤트를 잡아서 
+// 노드 서버가 종료되기 직전의 이벤트를 잡아서
 // 풀링이 가지고 있는 DB 연결 세션을 다 반납한다(끊어준다)
 process.on('beforeExit', ()=>{
     myPool.drain().then(()=>{

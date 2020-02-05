@@ -1,3 +1,6 @@
+<!-- views/join.ejs -->
+<!-- 회원가입 화면-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,7 +65,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- Bootstrap core JavaScript-->
@@ -76,13 +78,15 @@
   <script src="/js/sb-admin-2.min.js"></script>
 
   <script>
-        var checkNickNameMsg = document.getElementById('checkNickNameMsg') 
+
+        var checkNickNameMsg = document.getElementById('checkNickNameMsg')
 
         $('#checkExistNickName').on('change', (evt)=> {
             console.log(evt)
+
             $.ajax({
-                url:'/users/check',
-                data: {
+                url : '/users/check',
+                data : {
                    nickName : $('[name=nickName]').val()
                 },
                 type : 'get',
@@ -90,16 +94,19 @@
                 success : (data) => {
                     console.log('성공', typeof data, data)
                     console.log(data.length)
+
                     if (data.length == 0) {
                        //$('#checkNickNameMsg').append('사용할 수 있는 닉네임입니다')
                         checkNickNameMsg.innerHTML = '사용할 수 있는 닉네임입니다'
                         checkNickNameMsg.style.color = 'green'
                         checkNickNameMsg.style.fontSize = '10px'
+                        // join 버튼 활성화
                         $('#join').attr("disabled", false)
                     } else {
                         checkNickNameMsg.innerHTML = '이미 존재하는 닉네임입니다'
                         checkNickNameMsg.style.color = 'red'
                         checkNickNameMsg.style.fontSize = '10px'
+                        // join 버튼 비활성화
                         $('#join').attr("disabled", true)
                     }
                 },
@@ -110,6 +117,7 @@
         })
 
         function checkSamePassword() {
+
             var password = document.getElementById('password')
             var checkPassword = document.getElementById('checkPassword')
             var checkMsg = document.getElementById('checkMsg')
@@ -119,17 +127,18 @@
                     checkMsg.innerHTML = '비밀번호가 일치합니다'
                     checkMsg.style.color = 'green'
                     checkMsg.style.fontSize = '10px'
-                    $('#join').attr("disabled", false)  // join버튼 활성화          
+                    // join 버튼 활성화
+                    $('#join').attr("disabled", false)
                 } else {
                     checkMsg.innerHTML = '비밀번호가 일치하지 않습니다'
                     checkMsg.style.color = 'red'
                     checkMsg.style.fontSize = '10px'
-                    $('#join').attr("disabled", true)  // join버튼 비활성화
+                    // join 버튼 비활성화
+                    $('#join').attr("disabled", true)  
                 }
             }    
         }    
   </script>
 
 </body>
-
 </html>

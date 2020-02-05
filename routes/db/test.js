@@ -1,3 +1,6 @@
+// routes/db/test.js
+// DB 연결 테스트
+
 const mysql = require('mysql')
 
 exports.testDB = (cb) => {
@@ -17,5 +20,5 @@ exports.testDB = (cb) => {
             console.log('접속 종료?', e)
         })
     }
-  }); 
+  });
 }  

@@ -1,3 +1,6 @@
+<!-- views/board.ejs -->
+<!-- 메인 화면-->
+
 <!DOCTYPE html>
 <html>
 
@@ -7,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
         integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-        
+
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -31,36 +34,30 @@
     }
     .btn-mine {
         width: 30px;
-        height: 30px; 
+        height: 30px;
         float: right;
         margin-right: 10px;
     }
     #todoDiv, #doingDiv, #doneDiv{
         overflow:auto; width:100%; height:500px; margin-right: 30px;
     }
-    
-    html { 
+
+    html {
         scrollbar-arrow-color: #efefef;
-
-        scrollbar-Track-Color: #efefef; 
+        scrollbar-Track-Color: #efefef;
         scrollbar-base-color: #dfdfdf;
-
         scrollbar-Face-Color: #dfdfdf;
-
         scrollbar-3dLight-Color: #dfdfdf;         
         scrollbar-DarkShadow-Color: #dfdfdf;
-
         scrollbar-Highlight-Color: #dfdfdf;
-
         scrollbar-Shadow-Color: #dfdfdf
     }
     /* Chrome, Safari용 스크롤 바 */
     ::-webkit-scrollbar {width: 12px; height: 12px;  }
-    ::-webkit-scrollbar-button:start:decrement, 
+    ::-webkit-scrollbar-button:start:decrement,
     ::-webkit-scrollbar-button:end:increment {display: block; width: 12px;height: 12px; background: url() rgba(0,0,0,.05);}
     ::-webkit-scrollbar-track {     background: rgba(0,0,0,.05); }
     ::-webkit-scrollbar-thumb {  background: rgba(0,0,0,.1);  }
-
   </style>
 </head>
 
@@ -98,7 +95,7 @@
         <div class="row col-md-4">
             <h1 class="card-header">To do</h1>
             <div id='todoDiv'>
-                <% for(row of rows) { 
+                <% for(row of rows) {
                 if (row.type=='TODO') {%>
                     <div class="card border-left-primary shadow">
                         <ul>
@@ -121,7 +118,7 @@
         <div class="row col-md-4">
             <h1 class="card-header">Doing</h1>
             <div id='doingDiv'>
-                <% for(row of rows) { 
+                <% for(row of rows) {
                     if (row.type=='DOING') {%>
                 <div class="card border-left-primary shadow" >
                     <ul>
@@ -143,7 +140,7 @@
         <div class="row col-md-4">
             <h1 class="card-header">Done</h1>
             <div id='doneDiv'>
-                <% for(row of rows) { 
+                <% for(row of rows) {
                 if (row.type=='DONE') {%>
                 <div class="card border-left-primary shadow">
                     <ul>
@@ -164,16 +161,10 @@
 
     </div>
 
-
-
     <script>
+
     let id = 0;
     let user = 0;
-
-    function clickTxt(elem) {
-            id = $(elem).attr("id");
-            console.log(id);
-    }
 
     function todoArchive(id) {
         console.log('id', id);
@@ -185,9 +176,12 @@
             },
             type: 'get',
             dataType: 'json',
+
             success: (data) => {
                 console.log('성공', data)
+
                 $('#todoDiv').empty()
+
                 //화면 조작: dom 조작
                 $.each(data, (index, item) => {
                     if (item.type === 'TODO'){
@@ -205,8 +199,7 @@
                             </div>
                         </div>`)                        
                     }
-
-                }) //each문 끝
+                }) //each문 end
             },
             error: (err) => {
                 console.log('실패', err)
@@ -224,9 +217,12 @@
             },
             type: 'get',
             dataType: 'json',
+
             success: (data) => {
                 console.log('성공', data)
+
                 $('#doingDiv').empty()
+
                 //화면 조작: dom 조작
                 $.each(data, (index, item) => {
                     if (item.type === 'DOING'){
@@ -244,8 +240,7 @@
                             </div>
                         </div>`)                        
                     }
-                }) //each문 끝
-
+                }) //each문 end
             },
             error: (err) => {
                 console.log('실패', err)
@@ -263,9 +258,12 @@
             },
             type: 'get',
             dataType: 'json',
+
             success: (data) => {
                 console.log('성공', data)
+
                 $('#doneDiv').empty()
+
                 //화면 조작: dom 조작
                 $.each(data, (index, item) => {
                     if (item.type === 'DONE'){
@@ -283,8 +281,7 @@
                         </div>
                     </div>`)                        
                     }
-                }) //each문 끝
-
+                }) //each문 end
             },
             error: (err) => {
                 console.log('실패', err)
@@ -304,7 +301,7 @@
                 // 기존 데이터 삭제
                 $('#todoDiv').empty()
                 $('#doingDiv').empty()
-                $('#doneDiv').empty() 
+                $('#doneDiv').empty()
                 // 신규 데이터 추가
                 $.each(data, (idx, row)=>{
                     let html = `
@@ -315,7 +312,7 @@
                                 <li>담당자 : ${row.name}</li>
                                 <li>우선순위 : ${row.sequence}</li>
                             </ul>`
-                        
+
                         if( row.type == 'TODO' ) {
                             $('#todoDiv').append(html+`
                             <div>
@@ -338,17 +335,13 @@
                             </div>
                         </div>`)
                         }
-
                 })   
-
             },
             error: (err) => {
                 console.log('실패', err)
             }
         });
-
     }
-
 
     $('#showAll').on('click', (evt) => {
         evt.preventDefault()
@@ -360,13 +353,13 @@
             dataType: 'json',
             success: (data) => {
                 console.log('성공', data)
+
                 $('#todoDiv').empty()
                 $('#doingDiv').empty()
                 $('#doneDiv').empty()
 
                 //화면 조작: dom 조작
                 $.each(data, (index, item) => {
-
                     if (item.type === 'TODO') {
                         $('#todoDiv').append(`
                         <div class="card border-left-primary shadow">
@@ -394,7 +387,7 @@
                                 <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${item.id})'><i class="fas fa-trash"></i></button>
                                 <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
                             </div>
-                        </div>`) 
+                        </div>`)
                     } else if (item.type === 'DONE') {
                         $('#doneDiv').append(`
                         <div class="card border-left-primary shadow">
@@ -408,10 +401,9 @@
                             <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${item.id})'><i class="fas fa-trash"></i></button>
                             <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
                         </div>
-                    </div>`) 
+                    </div>`)
                     }
-                }) //each문 끝
-
+                }) //each문 end
             },
             error: (err) => {
                 console.log('실패', err)
@@ -420,8 +412,8 @@
         return false
     })
 
-
     function showUsers(user){
+
         $.ajax({
             url: '/search',
             data: {
@@ -429,19 +421,19 @@
             },
             type: 'get',
             dataType: 'json',
+
             success: (data) => {
                 console.log('성공', data)
+
                 $('#todoDiv').empty()
                 $('#doingDiv').empty()
                 $('#doneDiv').empty()
 
                 //화면 조작: dom 조작
                 $.each(data, (index, item) => {
-                    console.log('----------------여기--------', user)
 
                     if (item.name === user) {
                         console.log(item.name, user)
-
                         if (item.type === 'TODO') {
                             $('#todoDiv').append(`
                                 <div class="card border-left-primary shadow">
@@ -469,7 +461,7 @@
                                         <button class="btn btn-light btn-icon-split btn-mine" onclick='doingArchive(${item.id})'><i class="fas fa-trash"></i></button>
                                         <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
                                     </div>
-                                </div>`) 
+                                </div>`)
                         } else if (item.type === 'DONE') {
                             $('#doneDiv').append(`
                             <div class="card border-left-primary shadow">
@@ -483,19 +475,16 @@
                                     <button class="btn btn-light btn-icon-split btn-mine" onclick='doneArchive(${item.id})'><i class="fas fa-trash"></i></button>
                                     <button class="btn btn-light btn-icon-split btn-mine" onclick='moveBtn(${item.id})'><i class="fas fa-arrow-right"></i></button>                            
                                 </div>
-                            </div>`) 
+                            </div>`)
                         }
                     }
-                }) //each문 끝
+                }) //each문 end
             },
             error: (err) => {
                 console.log('실패', err)
             }
         });
-
     }
-
     </script>
 </body>
-
 </html>
